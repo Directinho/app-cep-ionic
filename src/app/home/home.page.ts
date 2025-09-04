@@ -32,6 +32,7 @@ export class HomePage {
   conteudo: ViaCepResponse | undefined;
   valor = '';
   randomGif: string = '';
+  apiStatus: 'initializing' | 'connected' | 'not-found' = 'initializing'; // Track API status
 
   private gifs: string[] = [
     'https://iili.io/KCCtaYx.th.gif',
@@ -41,20 +42,39 @@ export class HomePage {
   ];
 
   constructor() {
+    this.checkApiStatus(); // Check API status on initialization
     (window as any).meu_callback = (conteudo: ViaCepResponse) => {
+      this.loading.dismiss();
       if (!conteudo.erro) {
         this.Logradouro = conteudo.logradouro;
         this.Cidade = conteudo.localidade;
         this.Bairro = conteudo.bairro;
         this.Estado = conteudo.uf;
         this.conteudo = conteudo;
+        this.apiStatus = 'connected'; // API found
       } else {
+        this.apiStatus = 'not-found'; // API not found
         alert('CEP não encontrado.');
       }
     };
   }
 
+  async checkApiStatus() {
+    try {
+      // Test API with a known valid CEP
+      const response = await fetch('https://viacep.com.br/ws/01001000/json/');
+      if (response.ok) {
+        this.apiStatus = 'connected';
+      } else {
+        this.apiStatus = 'not-found';
+      }
+    } catch {
+      this.apiStatus = 'not-found';
+    }
+  }
+
   async searchCep() {
+    this.apiStatus = 'initializing'; // Set status to initializing when search starts
     await this.loading.present();
     this.resgate();
   }
@@ -88,10 +108,12 @@ export class HomePage {
         script.src = `https://viacep.com.br/ws/${cep}/json/?callback=meu_callback`;
         document.body.appendChild(script);
       } else {
+        this.apiStatus = 'not-found'; // Invalid CEP format
         alert('Formato de CEP inválido.');
         this.loading.dismiss();
       }
     } else {
+      this.apiStatus = 'not-found'; // No CEP entered
       alert('Por favor, insira um CEP.');
       this.loading.dismiss();
     }

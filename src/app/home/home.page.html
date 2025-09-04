@@ -31,6 +31,16 @@
       <ion-button shape="round" (click)="setTestCep('04010100')">CEP Do Metrô Ana Rosa</ion-button>
       <ion-button shape="round" (click)="setTestCep('02049000')">CEP Do Shopping Center Norte</ion-button>
     </div>
+    <br>
+    <div class="API-CONNECTION">
+      <p class="texto-connection">API está: <span class="detectando" [ngClass]="{
+        'initializing': apiStatus === 'initializing',
+        'connected': apiStatus === 'connected',
+        'not-found': apiStatus === 'not-found'
+      }">
+        {{ apiStatus === 'initializing' ? 'Iniciando API' : apiStatus === 'connected' ? 'Ligada' : 'Não encontrada' }}
+      </span></p>
+    </div>
 
     <ion-loading
       #loading
@@ -50,6 +60,7 @@
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
+          <h2 class="modal-titulo">Resultado</h2>
           <ion-list>
             <ion-item>
               <ion-label>Logradouro</ion-label>
@@ -77,4 +88,10 @@
       </ng-template>
     </ion-modal>
   </div>
+
+  <ion-footer>
+    <ion-toolbar>
+      <ion-title class="footer-title">Feito por <a href="https://github.com/TASS154">Thiago Alexandre</a> e <a href="https://github.com/Directinho">Henrique Luiz</a></ion-title>
+    </ion-toolbar>
+  </ion-footer>
 </ion-content>
