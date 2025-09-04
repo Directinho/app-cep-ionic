@@ -1,0 +1,7 @@
+{
+  "name": "cep",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
