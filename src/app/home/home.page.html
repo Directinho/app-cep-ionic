@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title class="center">
-      OnCep
+      ONCep
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -13,24 +13,64 @@
     </ion-toolbar>
   </ion-header>
 
+  <ion-segment value="cep" (ionChange)="onSegmentChange($event)">
+    <ion-segment-button value="cep">
+      <ion-label>Por CEP</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="endereco">
+      <ion-label>Por Endereço</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
   <div id="container">
     <ion-input
+      *ngIf="segmentValue === 'cep'"
       label="CEP"
       label-placement="floating"
       fill="solid"
       placeholder="Insira o CEP"
       [(ngModel)]="valor"
-      (ionInput)="onInputChange($event)">
+      >
     </ion-input>
 
+    <ion-input
+      *ngIf="segmentValue === 'endereco'"
+      label="Rua"
+      label-placement="floating"
+      fill="solid"
+      placeholder="Insira a Rua"
+      [(ngModel)]="Logradouro"
+      >
+    </ion-input>
+    <ion-input
+      *ngIf="segmentValue === 'endereco'"
+      label="Cidade"
+      label-placement="floating"
+      fill="solid"
+      placeholder="Insira a Cidade"
+      [(ngModel)]="Cidade"
+      >
+    </ion-input>
+        <ion-input
+      *ngIf="segmentValue === 'endereco'"
+      label="Estado"
+      label-placement="floating"
+      fill="solid"
+      placeholder="Insira o Estado"
+      [(ngModel)]="Estado"
+      >
+    </ion-input>
     <ion-button (click)="searchCep()" expand="block">Pesquisar</ion-button>
 
-    <h4>CEPS para TESTE</h4>
-    <div class="ceps-teste">
-      <ion-button shape="round" (click)="setTestCep('01531001')">CEP Da FIAP</ion-button>
-      <ion-button shape="round" (click)="setTestCep('04010100')">CEP Do Metrô Ana Rosa</ion-button>
-      <ion-button shape="round" (click)="setTestCep('02049000')">CEP Do Shopping Center Norte</ion-button>
+        <div *ngIf="segmentValue === 'cep'">
+      <h4>CEPS para TESTE</h4>
+      <div class="ceps-teste">
+        <ion-button shape="round" (click)="setTestCep('01531001')">CEP Da FIAP</ion-button>
+        <ion-button shape="round" (click)="setTestCep('04010100')">CEP Do Metrô Ana Rosa</ion-button>
+        <ion-button shape="round" (click)="setTestCep('02049000')">CEP Do Shopping Center Norte</ion-button>
+      </div>
     </div>
+
     <br>
     <div class="API-CONNECTION">
       <p class="texto-connection">API está: <span class="detectando" [ngClass]="{
@@ -78,6 +118,14 @@
               <ion-label>Estado</ion-label>
               <ion-text>{{ Estado }}</ion-text>
             </ion-item>
+            <ion-item>
+              <ion-label>CEP</ion-label>
+              <ion-text>{{ valor }}</ion-text>
+            </ion-item>
+            <ion-item *ngIf="segmentValue === 'cep'">
+              <ion-label>CEP</ion-label>
+              <ion-text>{{ conteudo?.cep }}</ion-text>
+            </ion-item>
           </ion-list>
           <div class="area-gif">
             <div class="gif-container">
@@ -88,6 +136,49 @@
       </ng-template>
     </ion-modal>
   </div>
+      <ion-modal #modal2 trigger="open-modal2">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-button (click)="exit()">Sair</ion-button>
+            </ion-buttons>
+            <ion-title>Resultado</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <h2 class="modal-titulo">Resultado</h2>
+          <ion-list>
+
+            <ion-item>
+              <ion-label>Rua</ion-label>
+              <ion-text>{{ Logradouro }}</ion-text>
+            </ion-item>
+            <ion-item>
+              <ion-label>CEP</ion-label>
+              <ion-text>{{ valor }}</ion-text>
+            </ion-item>
+            <ion-item>
+              <ion-label>Cidade</ion-label>
+              <ion-text>{{ Cidade }}</ion-text>
+            </ion-item>
+            <ion-item>
+              <ion-label>Estado</ion-label>
+              <ion-text>{{ Estado }}</ion-text>
+            </ion-item>
+            <ion-item *ngIf="segmentValue === 'cep'">
+              <ion-label>CEP</ion-label>
+              <ion-text>{{ conteudo?.cep }}</ion-text>
+            </ion-item>
+          </ion-list>
+          <div class="area-gif">
+            <div class="gif-container">
+              <img [src]="randomGif" alt="Random GIF" class="random-gif">
+            </div>
+          </div>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
 
   <ion-footer>
     <ion-toolbar>
